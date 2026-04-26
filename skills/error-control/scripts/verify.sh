@@ -102,17 +102,41 @@ verify_backup() {
     fi
 }
 
-# 协议确认函数
+# 协议确认函数（含附属资源）
 verify_protocol() {
     local current="$1"
     local target="$2"
+    local resources_desc="${3:-}"      # 附属资源描述
+    local resources_paths="${4:-}"     # 资源路径（空格分隔）
+    local compatibility_impact="${5:-}"  # 兼容性影响说明
     
-    if [ "$current" != "$target" ]; then
-        echo "⚠ 协议变更: $current → $target"
-        echo "  影响：客户端可能需要调整"
-        return 2  # 返回 2 表示警告
-    else
+    echo "=== 协议边界确认 ==="
+    
+    if [ "$current" = "$target" ]; then
         echo "✓ 协议保持不变: $current"
         return 0
     fi
+    
+    echo "⚠ 协议变更: $current → $target"
+    
+    # 检查附属资源
+    if [ -n "$resources_desc" ]; then
+        echo "  附属资源: $resources_desc"
+        if [ -n "$resources_paths" ]; then
+            for path in $resources_paths; do
+                if [ -f "$path" ] || [ -d "$path" ]; then
+                    echo "    ✓ 存在: $path"
+                else
+                    echo "    ✗ 缺失: $path"
+                fi
+            done
+        fi
+    fi
+    
+    # 兼容性影响
+    if [ -n "$compatibility_impact" ]; then
+        echo "  兼容性影响: $compatibility_impact"
+    fi
+    
+    return 2  # 协议变更始终返回警告，提醒注意
 }

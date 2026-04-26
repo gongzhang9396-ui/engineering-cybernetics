@@ -12,6 +12,9 @@
 | 空间边界 | {scope_single_multiple_all} | {confirmed} |
 | 时间边界 | {timing_immediate_scheduled} | {confirmed} |
 | 协议边界 | {protocol_unchanged_changed} | {confirmed} |
+| 附属资源 | {resources_description} | {checked} |
+| 资源路径 | {resources_paths} | {verified} |
+| 兼容性影响 | {impact_description} | {noted} |
 | 环境边界 | {env_dev_test_prod} | {confirmed} |
 | 回滚边界 | {backup_path_or_unbacked} | {confirmed} |
 
