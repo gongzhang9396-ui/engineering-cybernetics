@@ -5,6 +5,23 @@
 - **时间**: {timestamp}
 - **执行者**: Hermes Agent
 
+## 边界声明（第 0 阶段）
+
+| 维度 | 声明内容 | 状态 |
+|------|----------|------|
+| 空间边界 | {scope_single_multiple_all} | {confirmed} |
+| 时间边界 | {timing_immediate_scheduled} | {confirmed} |
+| 协议边界 | {protocol_unchanged_changed} | {confirmed} |
+| 环境边界 | {env_dev_test_prod} | {confirmed} |
+| 回滚边界 | {backup_path_or_unbacked} | {confirmed} |
+
+**偏差记录**：
+- 声明影响：{declared_scope}
+- 实际影响：{actual_scope}
+- 偏差处理：{deviation_handling}
+
+---
+
 ## 验证结果
 
 ### 1. 理解验证

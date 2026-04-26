@@ -55,3 +55,64 @@ verify_file() {
         return 1
     fi
 }
+
+# 边界确认函数
+verify_scope() {
+    local task="$1"
+    local scope="$2"  # single|multiple|all
+    
+    echo "=== 边界确认 ==="
+    echo "任务: $task"
+    
+    case "$scope" in
+        single)
+            echo "✓ 声明：仅影响单个资源"
+            ;;
+        multiple)
+            echo "⚠ 声明：影响多个资源，需逐项验证"
+            ;;
+        all)
+            echo "⚠ 声明：影响全部资源，需额外谨慎"
+            ;;
+        *)
+            echo "✗ 错误：未声明影响范围 (scope=$scope)"
+            return 1
+            ;;
+    esac
+    return 0
+}
+
+# 备份验证函数
+verify_backup() {
+    local original="$1"
+    local backup_dir="${2:-/tmp/error-control-backups}"
+    local timestamp=$(date +%Y%m%d_%H%M%S)
+    local backup_path="$backup_dir/$(basename $original).$timestamp.bak"
+    
+    mkdir -p "$backup_dir"
+    
+    if [ -f "$original" ] || [ -d "$original" ]; then
+        cp -r "$original" "$backup_path"
+        echo "✓ 已备份: $original → $backup_path"
+        echo "$backup_path"  # 输出备份路径供后续使用
+        return 0
+    else
+        echo "⚠ 原文件不存在，无需备份: $original"
+        return 2
+    fi
+}
+
+# 协议确认函数
+verify_protocol() {
+    local current="$1"
+    local target="$2"
+    
+    if [ "$current" != "$target" ]; then
+        echo "⚠ 协议变更: $current → $target"
+        echo "  影响：客户端可能需要调整"
+        return 2  # 返回 2 表示警告
+    else
+        echo "✓ 协议保持不变: $current"
+        return 0
+    fi
+}
